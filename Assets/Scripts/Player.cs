@@ -8,7 +8,9 @@ public class Player : MonoBehaviour
     [SerializeField] float speed = 1f;
     [SerializeField] ParticleSystem explosion;
     [SerializeField] GameObject player;
-    [SerializeField] AudioSource godmodeSFX;
+    [SerializeField] AudioSource sfx;
+    [SerializeField] AudioClip explosionSFX;
+    [SerializeField] AudioClip godmodeSFX;
     Rigidbody2D rb;
     bool destroyed = false;
     bool godmode = false;
@@ -33,7 +35,7 @@ public class Player : MonoBehaviour
                 godmode = !godmode;
                 if(godmode)
                 {
-                    godmodeSFX.PlayOneShot(godmodeSFX.clip, 1f);
+                    sfx.PlayOneShot(godmodeSFX, 1f);
                 }
     }
     
@@ -43,6 +45,7 @@ public class Player : MonoBehaviour
         ParticleSystem tmp = Instantiate(explosion);
         tmp.transform.position = player.transform.position;
         tmp.Play();
+        sfx.PlayOneShot(explosionSFX, 1f);
 
         yield return new WaitForSeconds(1.5f);
 
