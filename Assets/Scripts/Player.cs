@@ -5,12 +5,13 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-
     [SerializeField] float speed = 1f;
     [SerializeField] ParticleSystem explosion;
     [SerializeField] GameObject player;
+    [SerializeField] AudioSource godmodeSFX;
     Rigidbody2D rb;
     bool destroyed = false;
+    bool godmode = false;
 
     // Start is called before the first frame update
     void Start()
@@ -28,7 +29,12 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if(Input.GetKeyDown(KeyCode.G))
+                godmode = !godmode;
+                if(godmode)
+                {
+                    godmodeSFX.PlayOneShot(godmodeSFX.clip, 1f);
+                }
     }
     
     // TODO: Expand this function with music fading and return to Main Menu (because delay needed)
@@ -53,9 +59,12 @@ public class Player : MonoBehaviour
                 Instantiate(explosion, this.transform).Play();
                 break;
             case "EnemyProjectile":
-                destroyed = true;
-                StartCoroutine("PlayerLooseEffects");
-                // TODO: Save the Highcore here or in the case statement
+                if(!godmode)
+                {
+                    destroyed = true;
+                    StartCoroutine("PlayerLooseEffects");
+                    // TODO: Save the Highcore here or in the case statement
+                }
                 break;
             default:
                 break;
