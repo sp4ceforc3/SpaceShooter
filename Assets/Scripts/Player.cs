@@ -62,6 +62,7 @@ public class Player : MonoBehaviour
                 if(!godmode)
                 {
                     destroyed = true;
+                    Destroy(collision.gameObject);
                     StartCoroutine("PlayerLooseEffects");
                     // TODO: Save the Highcore here or in the case statement
                 }

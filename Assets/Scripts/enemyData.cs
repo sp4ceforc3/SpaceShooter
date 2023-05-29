@@ -5,6 +5,7 @@ using UnityEngine;
 
 // This is needed so that new objects can be created in the 'Create' menu in the project view
 [CreateAssetMenu(menuName = "Data/Enemy")]
+
 public class EnemyData : ScriptableObject
 {
     // This is public on purpose. If it was private with [SerializeField], we wouldn't be able to get the 
@@ -12,7 +13,8 @@ public class EnemyData : ScriptableObject
     // to return the value, like this:    public string EnemyName { get { return enemyName; } }
     public string enemyName;
     public Sprite image;
-    public int HP;
+    public int hp;
     public int movespeed;
     public GameObject laser;
+    public float shootIntervall;
 }
