@@ -21,5 +21,5 @@ public class GameManager : MonoBehaviour
     void Start() => highscoreText.text = $"{PlayerPrefs.GetInt("highscore")}";
 
     // Update is called once per frame
-    void Update() => leftClick.performed += loadLevel => SceneManager.LoadScene("Level");
+    void Update() => leftClick.performed += _ => SceneManager.LoadScene("Level");
 }

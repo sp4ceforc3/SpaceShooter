@@ -5917,6 +5917,7 @@ MonoBehaviour:
   player: {fileID: 813360816}
   sfx: {fileID: 813360823}
   explosionSFX: {fileID: 8300000, guid: d7fb098ce05e813419fe87b127f4f0c9, type: 3}
+  shootSFX: {fileID: 8300000, guid: 66ef56751671c364c8500fa604b13702, type: 3}
   godmodeSFX: {fileID: 8300000, guid: d74dc385b4639114e801c237842b6425, type: 3}
 --- !u!61 &813360821
 BoxCollider2D:
