@@ -9,11 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 5261c48828e355d4ab5239574f8809d7, type: 3}
   m_Name: Enemy_1
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  enemyName: 
-  image: {fileID: 21300000, guid: 1f0057e803758b84b94bdbcbd93c2081, type: 3}
-  HP: 5
-  movespeed: 50
+  m_EditorClassIdentifier: 
+  enemyName: Enemy_1
+  image: {fileID: 21300000, guid: 66d8530bd02e46042ba5348f98c7b8d7, type: 3}
+  hp: 5
+  movespeed: 150
   laser: {fileID: 4920017906580166028, guid: d5ba653e37e5c1a44831ceac72365898, type: 3}
+  shootIntervall: 0.5
