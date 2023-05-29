@@ -7,9 +7,6 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    // Scriptable object to store the highscore
-    [SerializeField] HighScore highscore;
-
     // UI element to display the highscore
     [SerializeField] TextMeshProUGUI highscoreText;
 
@@ -21,12 +18,8 @@ public class GameManager : MonoBehaviour
     private void OnDisable() => leftClick.Disable();
 
     // Start is called before the first frame update
-    void Start() => highscoreText.text = $"{highscore.completedWaves}";
+    void Start() => highscoreText.text = $"{PlayerPrefs.GetInt("highscore")}";
 
     // Update is called once per frame
-    void Update()
-    {
-        // When a left click is perfomed, load scene "Level"
-        leftClick.performed += loadLevel => SceneManager.LoadScene("Level");
-    }
+    void Update() => leftClick.performed += loadLevel => SceneManager.LoadScene("Level");
 }
