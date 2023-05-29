@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 
 public class Player : MonoBehaviour
@@ -10,22 +11,44 @@ public class Player : MonoBehaviour
     [SerializeField] GameObject player;
     [SerializeField] AudioSource sfx;
     [SerializeField] AudioClip explosionSFX;
+    [SerializeField] AudioClip shootSFX;
     [SerializeField] AudioClip godmodeSFX;
     Rigidbody2D rb;
     bool destroyed = false;
     bool godmode = false;
 
-    // Start is called before the first frame update
-    void Start()
+    // Input System to control the player
+    private PlayerControls playerControls;
+    private InputAction movement;
+
+    // Enble input manager when object is enabled
+    private void OnEnable() {
+        movement = playerControls.Player.Move;
+        movement.Enable();
+
+        playerControls.Player.Fire.performed += Shoot;
+        playerControls.Player.Fire.Enable();
+    }
+    
+    // Disable input manager when object is disabled
+    private void OnDisable() {
+        movement.Disable();
+        playerControls.Player.Fire.Disable();
+    }
+
+    // Awake is called before Start
+    void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        playerControls = new PlayerControls();
     }
 
     private void FixedUpdate() {
         if(!destroyed)
         {
-            rb.velocity =  Input.GetAxisRaw("Vertical") * Vector3.up * speed * Time.fixedDeltaTime;
-        }        
+            //rb.velocity =  Input.GetAxisRaw("Vertical") * Vector3.up * speed * Time.fixedDeltaTime;
+            rb.velocity = movement.ReadValue<Vector2>() * speed * Time.fixedDeltaTime;
+        }
     }
 
     // Update is called once per frame
@@ -79,5 +102,11 @@ public class Player : MonoBehaviour
     void OnTriggerEnter2D(Collider2D collision)
     {
 
+    }
+
+    // The Player shoot / press mouse button 
+    private void Shoot(InputAction.CallbackContext ctx) {
+        //TODO: Implement shoot
+        sfx.PlayOneShot(shootSFX, 1f);
     }
 }
