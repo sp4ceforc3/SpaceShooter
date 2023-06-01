@@ -19,46 +19,38 @@ public class Projectile : MonoBehaviour
     // Detect and handle collision with other objects
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (this.gameObject.tag == "PlayerProjectile") 
-        {   // Player's projectile 
-            switch (collision.gameObject.tag) {
-                case "Border":
-                    Destroy(this.gameObject);
-                    break;
+        switch (collision.gameObject.tag) {
+            case "Border":
+                Destroy(bullet);
+                break;
 
-                case "Enemy":
-                    Destroy(collision.gameObject);
-                    Destroy(this.gameObject);
-                    break;
+            case "Enemy":
+                //! Should be handled by the enemy itself.
+                //! Similiar to Player object.
+                Destroy(collision.gameObject); // -> no difference between player and enemy projectiles
 
-                case "EnemyProjectile":
-                    Destroy(collision.gameObject);
-                    Destroy(this.gameObject);
-                    break;
-                
-                default:
-                    break;
-            }
-        } else {
-            // Enemy's projectile            
-            switch (collision.gameObject.tag) {
-                case "Border":
-                    Destroy(this.gameObject);
-                    break;
+                Destroy(bullet);
+                break;
 
-                case "Enemy":
-                    Destroy(collision.gameObject);
-                    Destroy(this.gameObject);
-                    break;
+            case "EnemyProjectile":
+                // Destroy both projectiles
+                Destroy(collision.gameObject);
+                Destroy(bullet);
+                break;
 
-                case "Player":
-                    // Ending game is handled inside player 
-                    Destroy(this.gameObject);
-                    break;
-                
-                default:
-                    break;
-            }
+            case "Player":
+                // Handled by Player object
+                Destroy(bullet);
+                break;
+
+            case "PlayerProjectile":
+                // Destroy both projectiles
+                Destroy(collision.gameObject);
+                Destroy(bullet);
+                break;
+            
+            default:
+                break;
         }
     }
 }

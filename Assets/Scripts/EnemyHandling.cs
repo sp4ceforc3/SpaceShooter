@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class enemyHandling : MonoBehaviour
+public class EnemyHandling : MonoBehaviour
 {
     //TODO: later load from enemy_data 
     [SerializeField] float speed = 1f;
@@ -29,10 +29,10 @@ public class enemyHandling : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
         //TODO: load other data needed on Creation
-        speed = data.movespeed;
-        hp = data.hp;
-        sr.sprite = data.image;
-        shootIntervall = data.shootIntervall;
+        // speed = data.movespeed;
+        // hp = data.hp;
+        // sr.sprite = data.image;
+        // shootIntervall = data.shootIntervall;
 
         InvokeRepeating("Shoot", 1f, shootIntervall);
     }
@@ -61,6 +61,7 @@ public class enemyHandling : MonoBehaviour
     {
         
     }
+
     void OnCollisionEnter2D(Collision2D collision)
     {
         switch (collision.gameObject.tag)
