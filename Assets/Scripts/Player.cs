@@ -1,4 +1,6 @@
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
@@ -11,19 +13,27 @@ public class Player : MonoBehaviour
     [SerializeField] ParticleSystem explosion;
     [SerializeField] SpriteRenderer projectile;
     [SerializeField] GameObject player;
-    [SerializeField] AudioSource sfx;
-    [SerializeField] AudioClip explosionSFX;
-    [SerializeField] AudioClip shootSFX;
-    [SerializeField] AudioClip godmodeSFX;
 
     Rigidbody2D rb;
     bool destroyed = false;
     bool godmode = false;
 
+    // UI
+    [SerializeField] GameObject drippleLaser;
+
+    // Audio 
+    [SerializeField] AudioSource sfx;
+    [SerializeField] AudioClip shootSFX;
+    [SerializeField] AudioClip godmodeSFX;
+    [SerializeField] AudioClip specialSFX;
+    [SerializeField] AudioClip explosionSFX;
+
     // Shooting variables
-    private bool shooting = false;
-    private float lastShot = 0f;
+    private float lastShot = -0.5f;
     private GameObject firePoint;
+    private bool shooting = false;
+    private float lastSpecialShot = -3f;
+    private float specialCoolDown = 3f;
 
     // Highscore = number of survived waves
     private int highscore = 0;
@@ -49,7 +59,7 @@ public class Player : MonoBehaviour
         playerControls.Player.Fire.Enable();
 
         // Keyboard: "1"
-        playerControls.Player.Special.performed += _ => { /* TODO: */ };
+        playerControls.Player.Special.performed += _ => { Shoot(isSpecial: true); };
         playerControls.Player.Special.Enable();
 
         // Keyboard: "2"
@@ -95,14 +105,15 @@ public class Player : MonoBehaviour
             Vector2 direction = (mouseScreenPosition - (Vector2) gameObject.transform.position).normalized;
             gameObject.transform.up = direction;
 
-            Debug.Log($"{gameObject}: {(Vector2)gameObject.transform.up} vs. {direction}, Player Position: {(Vector2) gameObject.transform.position}");
-
             // Time between each shots has to be a half second or more.
             // Otherwise skip starting coroutine for shooting.
             if (shooting && (lastShot - Time.time) <= -0.5f) {
                 lastShot = Time.time;
-                StartCoroutine(nameof(Shoot));
+                Shoot(isSpecial: false);
             }
+
+            if (lastSpecialShot - Time.time <= -specialCoolDown)
+                drippleLaser.SetActive(true);
         }
     }
 
@@ -128,9 +139,23 @@ public class Player : MonoBehaviour
     }
 
     // Fire one projectile
-    private void Shoot() {
-        sfx.PlayOneShot(shootSFX, 1f);
-        Instantiate(projectile, firePoint.transform.position, firePoint.transform.rotation);
+    private void Shoot(bool isSpecial) {
+        if(!destroyed) {
+            if (!isSpecial) {
+                sfx.PlayOneShot(shootSFX, 1f);
+                Instantiate(projectile, firePoint.transform.position, firePoint.transform.rotation);
+            } else if (lastSpecialShot - Time.time <= -specialCoolDown) {
+                sfx.PlayOneShot(specialSFX, 1f);
+
+                lastSpecialShot = Time.time;
+                drippleLaser.SetActive(false);
+
+                Vector3 fireDirection = firePoint.transform.up.normalized;
+                Instantiate(projectile, firePoint.transform.position + 2*fireDirection, firePoint.transform.rotation);
+                Instantiate(projectile, firePoint.transform.position + fireDirection, firePoint.transform.rotation);
+                Instantiate(projectile, firePoint.transform.position, firePoint.transform.rotation);
+            }
+        }
     }
 
     // Detect and handle collision with other objects
@@ -162,10 +187,6 @@ public class Player : MonoBehaviour
                 } else {
                     Destroy(collision.gameObject);
                 }
-                break;
-
-            case "PlayerProjectile":
-                Destroy(collision.gameObject);
                 break;
             
             default:

@@ -27,7 +27,6 @@ public class EnemyHandling : MonoBehaviour
     // Awake is called after creation 
     private void Awake() {
         player = GameObject.FindGameObjectWithTag("Player");
-        Debug.Log(player.transform.tag);
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
         cl = GetComponent<Collider2D>();
@@ -88,18 +87,14 @@ public class EnemyHandling : MonoBehaviour
                 // TODO: This is just a Test dummy to see, whether explosion works
                 //Instantiate(explosion, this.transform).Play();
                 break;
+
             case "PlayerProjectile":
                 hp -= 1;
                 destroyed = hp == 0;
-                // Remove projectile
-                Destroy(collision.gameObject);
                 if(destroyed)
                     StartCoroutine("EnemyDestroyedEffects");
                 break;
-            case "EnemyProjectile":
-                // ignore collision with other enenies projectiles
-                 Physics2D.IgnoreCollision(collision.gameObject.GetComponent<Collider2D>(), cl);
-                 break;
+                 
             default:
                 break;
         }
