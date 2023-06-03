@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: -7380468825030255579}
   - component: {fileID: 8078392058862997150}
   - component: {fileID: 7025069362825443578}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: PlayerPorjectile
   m_TagString: PlayerProjectile
   m_Icon: {fileID: 0}
@@ -99,7 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51bdc42435295ef358f80342c2279290, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 15
+  speed: 0.001
 --- !u!61 &8078392058862997150
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -138,12 +138,12 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 0.0001
   m_LinearDrag: 0
   m_AngularDrag: 0
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 1
+  m_CollisionDetection: 0
   m_Constraints: 0
