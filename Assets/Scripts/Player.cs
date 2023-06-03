@@ -104,6 +104,9 @@ public class Player : MonoBehaviour
         tmp.transform.position = player.transform.position;
         tmp.Play();
         sfx.PlayOneShot(explosionSFX, 1f);
+        // Player should stay under explosion
+        rb.velocity = new Vector3(0, 0, 0);
+        Destroy(rb);
 
         yield return new WaitForSeconds(1.5f);
 

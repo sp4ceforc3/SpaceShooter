@@ -24,20 +24,21 @@ public class Projectile : MonoBehaviour
                 Destroy(bullet);
                 break;
 
-            case "Enemy":
+            //! Projectile collision will be deactivate via Unity itself.
+            //! Destroying projectile should be possible for special attack of bosses!
+            /*case "Enemy":
                 //! Should be handled by the enemy itself.
                 //! Similiar to Player object.
-                Destroy(collision.gameObject); // -> no difference between player and enemy projectiles
+                //Destroy(collision.gameObject); // -> no difference between player and enemy projectiles
 
                 Destroy(bullet);
                 break;
-
             case "EnemyProjectile":
                 // Destroy both projectiles
                 Destroy(collision.gameObject);
                 Destroy(bullet);
                 break;
-
+            /*
             case "Player":
                 // Handled by Player object
                 Destroy(bullet);
@@ -48,9 +49,9 @@ public class Projectile : MonoBehaviour
                 Destroy(collision.gameObject);
                 Destroy(bullet);
                 break;
-            
             default:
                 break;
+            */
         }
     }
 }
