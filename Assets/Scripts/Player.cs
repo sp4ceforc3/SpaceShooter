@@ -31,12 +31,17 @@ public class Player : MonoBehaviour
     // Input System to control the player
     private PlayerControls playerControls;
     private InputAction movement;
+    private InputAction look;
 
     // Enble input manager when object is enabled
     private void OnEnable() {
         // Keyboard: "WASD"
         movement = playerControls.Player.Move;
         movement.Enable();
+
+        // Mousepointer
+        look = playerControls.Player.Look;
+        look.Enable();
 
         // Keyboard: "Space"
         playerControls.Player.Fire.started += _ => { shooting = true; };
@@ -83,7 +88,13 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate() {
         if(!destroyed) {
+            // Movement
             rb.velocity = movement.ReadValue<Vector2>() * speed * Time.fixedDeltaTime;
+
+            // Rotation
+            Vector2 mouseScreenPosition = Camera.main.ScreenToWorldPoint(look.ReadValue<Vector2>());
+            Vector2 direction = (mouseScreenPosition - (Vector2) gameObject.transform.position).normalized;
+            gameObject.transform.up = direction;
 
             // Time between each shots has to be a half second or more.
             // Otherwise skip starting coroutine for shooting.
