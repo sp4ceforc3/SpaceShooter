@@ -9,8 +9,12 @@ public class EnemyHandling : MonoBehaviour
     [SerializeField] ParticleSystem explosion;
     [SerializeField] GameObject enemy; 
     [SerializeField] EnemyData data;
+    [SerializeField] SpriteRenderer projectile;
+
     Rigidbody2D rb;
     SpriteRenderer sr;
+    Collider2D cl;
+    private GameObject firePoint;
     int hp;
     bool destroyed = false;
     float shootIntervall = 1f;
@@ -21,18 +25,21 @@ public class EnemyHandling : MonoBehaviour
 
     void Shoot()
     {
-        Debug.Log("Shooting");
+        Instantiate(projectile, firePoint.transform.position, firePoint.transform.rotation);
     }
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
+        cl = GetComponent<Collider2D>();
+
+        firePoint = gameObject.transform.GetChild(0).gameObject;
         //TODO: load other data needed on Creation
-        // speed = data.movespeed;
-        // hp = data.hp;
-        // sr.sprite = data.image;
-        // shootIntervall = data.shootIntervall;
+        speed = data.movespeed;
+        hp = data.hp;
+        sr.sprite = data.image;
+        shootIntervall = data.shootIntervall;
 
         InvokeRepeating("Shoot", 1f, shootIntervall);
     }
@@ -50,6 +57,9 @@ public class EnemyHandling : MonoBehaviour
         ParticleSystem tmp = Instantiate(explosion);
         tmp.transform.position = enemy.transform.position;
         tmp.Play();
+        // stay under explosion effect
+        rb.velocity = new Vector3(0, 0, 0);
+        Destroy(rb);
 
         yield return new WaitForSeconds(1.5f);
 
@@ -79,6 +89,10 @@ public class EnemyHandling : MonoBehaviour
                 if(destroyed)
                     StartCoroutine("EnemyDestroyedEffects");
                 break;
+            case "EnemyProjectile":
+                // ignore collision with other enenies projectiles
+                 Physics2D.IgnoreCollision(collision.gameObject.GetComponent<Collider2D>(), cl);
+                 break;
             default:
                 break;
         }
