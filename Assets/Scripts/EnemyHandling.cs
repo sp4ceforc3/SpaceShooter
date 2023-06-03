@@ -21,20 +21,23 @@ public class EnemyHandling : MonoBehaviour
 
     int direction = 1;
 
-    // Start is called before the first frame update
+    // Player -> Position
+    private GameObject player;
 
-    void Shoot()
-    {
-        Instantiate(projectile, firePoint.transform.position, firePoint.transform.rotation);
-    }
-
-    void Start()
-    {
+    // Awake is called after creation 
+    private void Awake() {
+        player = GameObject.FindGameObjectWithTag("Player");
+        Debug.Log(player.transform.tag);
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
         cl = GetComponent<Collider2D>();
-
         firePoint = gameObject.transform.GetChild(0).gameObject;
+    }
+
+    void Shoot() => Instantiate(projectile, firePoint.transform.position, firePoint.transform.rotation);
+
+    // Start is called before the first frame update
+    void Start() {
         //TODO: load other data needed on Creation
         speed = data.movespeed;
         hp = data.hp;
@@ -44,11 +47,18 @@ public class EnemyHandling : MonoBehaviour
         InvokeRepeating("Shoot", 1f, shootIntervall);
     }
 
-    private void FixedUpdate()
-    {
-        if(!destroyed)
-        {
+    private void FixedUpdate() {
+        if(!destroyed) {
+            // Movement
             rb.velocity =  direction * Vector3.up * speed * Time.fixedDeltaTime;
+
+            // TODO: Increase properbility of rotation by wave
+            if (true) {
+                // Rotation
+                Vector2 playerPos = (Vector2) player.transform.position;
+                Vector2 lookDirection = ((Vector2) gameObject.transform.position - playerPos).normalized;
+                gameObject.transform.up = lookDirection;
+            }
         }        
     }
 
@@ -67,10 +77,7 @@ public class EnemyHandling : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    void Update() {}
 
     void OnCollisionEnter2D(Collision2D collision)
     {

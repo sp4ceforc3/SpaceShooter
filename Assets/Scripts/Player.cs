@@ -79,8 +79,7 @@ public class Player : MonoBehaviour
     }
 
     // Awake is called before Start
-    void Awake()
-    {
+    void Awake() {
         rb = GetComponent<Rigidbody2D>();
         playerControls = new PlayerControls();
         firePoint = gameObject.transform.GetChild(0).gameObject;
@@ -95,6 +94,8 @@ public class Player : MonoBehaviour
             Vector2 mouseScreenPosition = Camera.main.ScreenToWorldPoint(look.ReadValue<Vector2>());
             Vector2 direction = (mouseScreenPosition - (Vector2) gameObject.transform.position).normalized;
             gameObject.transform.up = direction;
+
+            Debug.Log($"{gameObject}: {(Vector2)gameObject.transform.up} vs. {direction}, Player Position: {(Vector2) gameObject.transform.position}");
 
             // Time between each shots has to be a half second or more.
             // Otherwise skip starting coroutine for shooting.
