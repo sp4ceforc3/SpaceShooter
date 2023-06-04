@@ -1,4 +1,6 @@
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
@@ -11,19 +13,27 @@ public class Player : MonoBehaviour
     [SerializeField] ParticleSystem explosion;
     [SerializeField] SpriteRenderer projectile;
     [SerializeField] GameObject player;
-    [SerializeField] AudioSource sfx;
-    [SerializeField] AudioClip explosionSFX;
-    [SerializeField] AudioClip shootSFX;
-    [SerializeField] AudioClip godmodeSFX;
 
     Rigidbody2D rb;
     bool destroyed = false;
     bool godmode = false;
 
+    // UI
+    [SerializeField] Image drippleLaser;
+
+    // Audio 
+    [SerializeField] AudioSource sfx;
+    [SerializeField] AudioClip shootSFX;
+    [SerializeField] AudioClip godmodeSFX;
+    [SerializeField] AudioClip specialSFX;
+    [SerializeField] AudioClip explosionSFX;
+
     // Shooting variables
-    private bool shooting = false;
-    private float lastShot = 0f;
+    private float lastShot = -0.5f;
     private GameObject firePoint;
+    private bool shooting = false;
+    private float lastSpecialShot = -3f;
+    private float specialCoolDown = 3f;
 
     // Highscore = number of survived waves
     private int highscore = 0;
@@ -31,6 +41,7 @@ public class Player : MonoBehaviour
     // Input System to control the player
     private PlayerControls playerControls;
     private InputAction movement;
+    private InputAction look;
 
     // Enble input manager when object is enabled
     private void OnEnable() {
@@ -38,13 +49,17 @@ public class Player : MonoBehaviour
         movement = playerControls.Player.Move;
         movement.Enable();
 
+        // Mousepointer
+        look = playerControls.Player.Look;
+        look.Enable();
+
         // Keyboard: "Space"
         playerControls.Player.Fire.started += _ => { shooting = true; };
         playerControls.Player.Fire.canceled += _ => { shooting = false; };
         playerControls.Player.Fire.Enable();
 
         // Keyboard: "1"
-        playerControls.Player.Special.performed += _ => { /* TODO: */ };
+        playerControls.Player.Special.performed += _ => { Shoot(isSpecial: true); };
         playerControls.Player.Special.Enable();
 
         // Keyboard: "2"
@@ -74,8 +89,7 @@ public class Player : MonoBehaviour
     }
 
     // Awake is called before Start
-    void Awake()
-    {
+    void Awake() {
         rb = GetComponent<Rigidbody2D>();
         playerControls = new PlayerControls();
         firePoint = gameObject.transform.GetChild(0).gameObject;
@@ -83,14 +97,23 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate() {
         if(!destroyed) {
+            // Movement
             rb.velocity = movement.ReadValue<Vector2>() * speed * Time.fixedDeltaTime;
+
+            // Rotation
+            Vector2 mouseScreenPosition = Camera.main.ScreenToWorldPoint(look.ReadValue<Vector2>());
+            Vector2 direction = (mouseScreenPosition - (Vector2) gameObject.transform.position).normalized;
+            gameObject.transform.up = direction;
 
             // Time between each shots has to be a half second or more.
             // Otherwise skip starting coroutine for shooting.
             if (shooting && (lastShot - Time.time) <= -0.5f) {
                 lastShot = Time.time;
-                StartCoroutine(nameof(Shoot));
+                Shoot(isSpecial: false);
             }
+
+            if (drippleLaser.fillAmount < 1f)
+                drippleLaser.fillAmount += 0.9f / (specialCoolDown / Time.fixedDeltaTime);
         }
     }
 
@@ -116,9 +139,23 @@ public class Player : MonoBehaviour
     }
 
     // Fire one projectile
-    private void Shoot() {
-        sfx.PlayOneShot(shootSFX, 1f);
-        Instantiate(projectile, firePoint.transform.position, firePoint.transform.rotation);
+    private void Shoot(bool isSpecial) {
+        if(!destroyed) {
+            if (!isSpecial) {
+                sfx.PlayOneShot(shootSFX, 1f);
+                Instantiate(projectile, firePoint.transform.position, firePoint.transform.rotation);
+            } else if (lastSpecialShot - Time.time <= -specialCoolDown) {
+                sfx.PlayOneShot(specialSFX, 1f);
+
+                lastSpecialShot = Time.time;
+                drippleLaser.fillAmount = 0f;
+
+                Vector3 fireDirection = firePoint.transform.up.normalized;
+                Instantiate(projectile, firePoint.transform.position + 2*fireDirection, firePoint.transform.rotation);
+                Instantiate(projectile, firePoint.transform.position + fireDirection, firePoint.transform.rotation);
+                Instantiate(projectile, firePoint.transform.position, firePoint.transform.rotation);
+            }
+        }
     }
 
     // Detect and handle collision with other objects
@@ -150,10 +187,6 @@ public class Player : MonoBehaviour
                 } else {
                     Destroy(collision.gameObject);
                 }
-                break;
-
-            case "PlayerProjectile":
-                Destroy(collision.gameObject);
                 break;
             
             default:
