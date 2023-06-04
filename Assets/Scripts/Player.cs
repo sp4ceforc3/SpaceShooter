@@ -23,7 +23,8 @@ public class Player : MonoBehaviour
     bool godmode = false;
 
     // UI
-    [SerializeField] Image drippleLaser;
+    [SerializeField] Image drippleLaserUI;
+    [SerializeField] Image specialLinusUI;
 
     // Audio 
     [SerializeField] AudioSource sfx;
@@ -39,7 +40,9 @@ public class Player : MonoBehaviour
     private bool shooting = false;
     private float lastSpecialShot = -3f;
     private float specialCoolDown = 3f;
-    int numberOfMines = 20;
+    private float lastSpecialLinusShot = 0f;
+    private float specialLinusCoolDown = 10f;
+    private int numberOfMines = 20;
 
     // Highscore = number of survived waves
     private int highscore = 0;
@@ -70,11 +73,11 @@ public class Player : MonoBehaviour
 
         // Keyboard: "2"
         playerControls.Player.SpecialDomai.performed += _ => { /* TODO: */ };
-        playerControls.Player.Special.Enable();
+        playerControls.Player.SpecialDomai.Enable();
 
         // Keyboard: "3"
         playerControls.Player.SpecialLinus.performed += _ => { ShootLinusSpecial(); };
-        playerControls.Player.Special.Enable();
+        playerControls.Player.SpecialLinus.Enable();
 
         // Keyboard: "G"
         playerControls.Player.Godmode.performed += _ => {
@@ -121,8 +124,11 @@ public class Player : MonoBehaviour
                 Shoot(isSpecial: false);
             }
 
-            if (drippleLaser.fillAmount < 1f)
-                drippleLaser.fillAmount += 0.9f / (specialCoolDown / Time.fixedDeltaTime);
+            if (drippleLaserUI.fillAmount < 1f)
+                drippleLaserUI.fillAmount += 0.9f / (specialCoolDown / Time.fixedDeltaTime);
+
+            if (specialLinusUI.fillAmount < 1f)
+                specialLinusUI.fillAmount += 0.9f / (specialLinusCoolDown / Time.fixedDeltaTime);
         }
     }
 
@@ -160,7 +166,7 @@ public class Player : MonoBehaviour
                 sfx.PlayOneShot(specialSFX, 1f);
 
                 lastSpecialShot = Time.time;
-                drippleLaser.fillAmount = 0f;
+                drippleLaserUI.fillAmount = 0f;
 
                 Vector3 fireDirection = firePoint.transform.up.normalized;
                 Instantiate(projectile, firePoint.transform.position + 2*fireDirection, firePoint.transform.rotation);
@@ -171,9 +177,11 @@ public class Player : MonoBehaviour
     }
 
     private void ShootLinusSpecial() {
-        if(!destroyed)
+        if(!destroyed && lastSpecialLinusShot - Time.time <= -specialLinusCoolDown)
         {
-            Debug.Log("Linus Special");
+            lastSpecialLinusShot = Time.time;
+            specialLinusUI.fillAmount = 0f;
+
             for(int i = 0; i < numberOfMines; i++)
             {
                 Transform mft = minefield.transform;
