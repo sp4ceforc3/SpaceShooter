@@ -188,6 +188,19 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        switch (other.gameObject.tag)
+        {
+           case "EnemyProjectile":
+                if(!godmode) {
+                    rb.velocity = new Vector3(0, 0, 0);
+                    destroyed = true;
+                    StartCoroutine(nameof(PlayerLooseEffects));
+                }
+                break;
+        }
+    }
     // Detect and handle collision with other objects
     void OnCollisionEnter2D(Collision2D collision)
     {
