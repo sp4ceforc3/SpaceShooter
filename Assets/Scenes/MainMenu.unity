@@ -170,6 +170,7 @@ MonoBehaviour:
       m_Action: Left Click
       m_Flags: 0
     m_Flags: 0
+  audioMixer: {fileID: 24100000, guid: 763293df32db8f14a97827b7bb716a2f, type: 2}
 --- !u!4 &481076890
 Transform:
   m_ObjectHideFlags: 0
@@ -10537,7 +10538,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 7017457801447110283, guid: 763293df32db8f14a97827b7bb716a2f, type: 2}
-  m_audioClip: {fileID: 8300000, guid: d7deb5d6589b1b2448b1126969faa3d8, type: 3}
+  m_audioClip: {fileID: 8300000, guid: a966fcafab862434bb2bb031e4ba81b3, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1

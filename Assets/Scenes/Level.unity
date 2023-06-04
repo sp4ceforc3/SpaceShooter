@@ -5630,6 +5630,7 @@ MonoBehaviour:
   explosionSFX: {fileID: 8300000, guid: d7fb098ce05e813419fe87b127f4f0c9, type: 3}
   shootSFX: {fileID: 8300000, guid: 8e227e7a5dbe60846ae93d1814a38fb1, type: 3}
   godmodeSFX: {fileID: 8300000, guid: d74dc385b4639114e801c237842b6425, type: 3}
+  audioMixer: {fileID: 24100000, guid: 763293df32db8f14a97827b7bb716a2f, type: 2}
 --- !u!50 &813360822
 Rigidbody2D:
   serializedVersion: 4

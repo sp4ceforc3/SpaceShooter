@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using UnityEngine.Audio;
 
 
 public class Player : MonoBehaviour
@@ -15,6 +16,7 @@ public class Player : MonoBehaviour
     [SerializeField] AudioClip explosionSFX;
     [SerializeField] AudioClip shootSFX;
     [SerializeField] AudioClip godmodeSFX;
+    [SerializeField] AudioMixer audioMixer;
 
     Rigidbody2D rb;
     bool destroyed = false;
@@ -76,6 +78,7 @@ public class Player : MonoBehaviour
     // Awake is called before Start
     void Awake()
     {
+        StartCoroutine(FadeMixerGroup.StartFade(audioMixer, "MasterVolume", 2f, 1));
         rb = GetComponent<Rigidbody2D>();
         playerControls = new PlayerControls();
         firePoint = gameObject.transform.GetChild(0).gameObject;
@@ -107,6 +110,8 @@ public class Player : MonoBehaviour
         // Player should stay under explosion
         rb.velocity = new Vector3(0, 0, 0);
         Destroy(rb);
+
+        StartCoroutine(FadeMixerGroup.StartFade(audioMixer, "MasterVolume", 1.5f, 0f));
 
         yield return new WaitForSeconds(1.5f);
 
@@ -167,4 +172,5 @@ public class Player : MonoBehaviour
         if (PlayerPrefs.GetInt(nameof(highscore)) < highscore)
             PlayerPrefs.SetInt(nameof(highscore), highscore);
     }
+
 }
