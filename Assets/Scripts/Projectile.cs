@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    // The gameobject of th projectile
+    // The gameobject of the projectile
     private GameObject bullet;
 
     // Impulse modifier / Speed

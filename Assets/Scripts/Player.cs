@@ -14,8 +14,11 @@ public class Player : MonoBehaviour
     [SerializeField] ParticleSystem explosion;
     [SerializeField] SpriteRenderer projectile;
     [SerializeField] GameObject player;
+    [SerializeField] GameObject minefield;
+    [SerializeField] GameObject mine;
 
     Rigidbody2D rb;
+    Collider2D cl; 
     bool destroyed = false;
     bool godmode = false;
 
@@ -36,6 +39,7 @@ public class Player : MonoBehaviour
     private bool shooting = false;
     private float lastSpecialShot = -3f;
     private float specialCoolDown = 3f;
+    int numberOfMines = 20;
 
     // Highscore = number of survived waves
     private int highscore = 0;
@@ -69,13 +73,14 @@ public class Player : MonoBehaviour
         playerControls.Player.Special.Enable();
 
         // Keyboard: "3"
-        playerControls.Player.SpecialLinus.performed += _ => { /* TODO: */ };
+        playerControls.Player.SpecialLinus.performed += _ => { ShootLinusSpecial(); };
         playerControls.Player.Special.Enable();
 
         // Keyboard: "G"
         playerControls.Player.Godmode.performed += _ => {
             godmode = !godmode;
-            sfx.PlayOneShot(godmodeSFX, 1f);    // play sound at change
+            // play sound at change
+            sfx.PlayOneShot(godmodeSFX, 1f);
         };
         playerControls.Player.Godmode.Enable();
     }
@@ -93,6 +98,7 @@ public class Player : MonoBehaviour
     // Awake is called before Start
     void Awake() {
         rb = GetComponent<Rigidbody2D>();
+        cl = GetComponent<Collider2D>();
         playerControls = new PlayerControls();
         firePoint = gameObject.transform.GetChild(0).gameObject;
         StartCoroutine(FadeMixerGroup.StartFade(audioMixer, "MasterVolume", 2f, 1));
@@ -126,6 +132,7 @@ public class Player : MonoBehaviour
     // TODO: Expand this function with music fading and return to Main Menu (because delay needed)
     IEnumerator PlayerLooseEffects()
     {
+        Destroy(cl);
         ParticleSystem tmp = Instantiate(explosion);
         tmp.transform.position = player.transform.position;
         tmp.Play();
@@ -160,6 +167,24 @@ public class Player : MonoBehaviour
                 Instantiate(projectile, firePoint.transform.position + fireDirection, firePoint.transform.rotation);
                 Instantiate(projectile, firePoint.transform.position, firePoint.transform.rotation);
             }
+        }
+    }
+
+    private void ShootLinusSpecial() {
+        if(!destroyed)
+        {
+            Debug.Log("Linus Special");
+            for(int i = 0; i < numberOfMines; i++)
+            {
+                Transform mft = minefield.transform;
+                float rangeXBounds = -(mft.lossyScale.x - 1) / 2;
+                float rangeYBounds = -(mft.lossyScale.y - 1) / 2;
+                float x = Random.Range(- rangeXBounds, rangeXBounds);
+                float y = Random.Range(- rangeYBounds, rangeYBounds);
+                Vector3 spawnPos = new Vector3(x, y, 0); 
+                Instantiate(mine, spawnPos, mine.transform.rotation);
+            }
+                 
         }
     }
 
