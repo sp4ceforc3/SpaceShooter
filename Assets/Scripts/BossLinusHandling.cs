@@ -2,14 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyHandling : MonoBehaviour
+public class BossLinusHandling : MonoBehaviour
 {
-    //TODO: later load from enemy_data 
     [SerializeField] float speed = 1f;
     [SerializeField] ParticleSystem explosion;
     [SerializeField] GameObject enemy; 
     [SerializeField] EnemyData data;
     [SerializeField] SpriteRenderer projectile;
+    [SerializeField] SpriteRenderer laserBeam;
+    [SerializeField] GameObject firePoint1;
+    [SerializeField] GameObject firePoint2;
+    [SerializeField] GameObject beamShootPoint;
 
     //Audio
     [SerializeField] AudioSource sfx;
@@ -34,20 +37,28 @@ public class EnemyHandling : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
         cl = GetComponent<Collider2D>();
-        firePoint = gameObject.transform.GetChild(0).gameObject;
     }
 
-    void Shoot() => Instantiate(projectile, firePoint.transform.position, firePoint.transform.rotation);
+    void Shoot()
+    {
+        Instantiate(projectile, firePoint1.transform.position, firePoint1.transform.rotation);
+        Instantiate(projectile, firePoint2.transform.position, firePoint2.transform.rotation);
+    }
+    
+    void FireBeam()
+    {
+        Instantiate(laserBeam, beamShootPoint.transform.position, beamShootPoint.transform.rotation);
+    }
 
     // Start is called before the first frame update
     void Start() {
         //TODO: load other data needed on Creation
         speed = data.movespeed;
         hp = data.hp;
-        sr.sprite = data.image;
         shootIntervall = data.shootIntervall;
 
         InvokeRepeating("Shoot", 1f, shootIntervall);
+        InvokeRepeating("FireBeam", 8f, 10f);
     }
 
     private void FixedUpdate() {
@@ -112,5 +123,4 @@ public class EnemyHandling : MonoBehaviour
         }
 
     }
-
 }
