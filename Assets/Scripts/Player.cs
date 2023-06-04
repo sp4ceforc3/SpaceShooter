@@ -19,7 +19,7 @@ public class Player : MonoBehaviour
     bool godmode = false;
 
     // UI
-    [SerializeField] GameObject drippleLaser;
+    [SerializeField] Image drippleLaser;
 
     // Audio 
     [SerializeField] AudioSource sfx;
@@ -112,8 +112,8 @@ public class Player : MonoBehaviour
                 Shoot(isSpecial: false);
             }
 
-            if (lastSpecialShot - Time.time <= -specialCoolDown)
-                drippleLaser.SetActive(true);
+            if (drippleLaser.fillAmount < 1f)
+                drippleLaser.fillAmount += 0.9f / (specialCoolDown / Time.fixedDeltaTime);
         }
     }
 
@@ -148,7 +148,7 @@ public class Player : MonoBehaviour
                 sfx.PlayOneShot(specialSFX, 1f);
 
                 lastSpecialShot = Time.time;
-                drippleLaser.SetActive(false);
+                drippleLaser.fillAmount = 0f;
 
                 Vector3 fireDirection = firePoint.transform.up.normalized;
                 Instantiate(projectile, firePoint.transform.position + 2*fireDirection, firePoint.transform.rotation);
