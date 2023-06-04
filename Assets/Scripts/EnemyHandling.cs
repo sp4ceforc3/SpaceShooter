@@ -11,6 +11,10 @@ public class EnemyHandling : MonoBehaviour
     [SerializeField] EnemyData data;
     [SerializeField] SpriteRenderer projectile;
 
+    //Audio
+    [SerializeField] AudioSource sfx;
+    [SerializeField] AudioClip explosionSFX;
+
     Rigidbody2D rb;
     SpriteRenderer sr;
     Collider2D cl;
@@ -70,6 +74,7 @@ public class EnemyHandling : MonoBehaviour
         // stay under explosion effect
         rb.velocity = new Vector3(0, 0, 0);
         Destroy(rb);
+        sfx.PlayOneShot(explosionSFX, 1f);
 
         yield return new WaitForSeconds(1.5f);
 
