@@ -14,11 +14,6 @@ public class Player : MonoBehaviour
     [SerializeField] ParticleSystem explosion;
     [SerializeField] SpriteRenderer projectile;
     [SerializeField] GameObject player;
-    [SerializeField] AudioSource sfx;
-    [SerializeField] AudioClip explosionSFX;
-    [SerializeField] AudioClip shootSFX;
-    [SerializeField] AudioClip godmodeSFX;
-    [SerializeField] AudioMixer audioMixer;
 
     Rigidbody2D rb;
     bool destroyed = false;
@@ -33,6 +28,7 @@ public class Player : MonoBehaviour
     [SerializeField] AudioClip godmodeSFX;
     [SerializeField] AudioClip specialSFX;
     [SerializeField] AudioClip explosionSFX;
+    [SerializeField] AudioMixer audioMixer;
 
     // Shooting variables
     private float lastShot = -0.5f;
