@@ -63,6 +63,7 @@ public class EnemyHandling : MonoBehaviour
 
     IEnumerator EnemyDestroyedEffects()
     {
+        Destroy(cl);
         ParticleSystem tmp = Instantiate(explosion);
         tmp.transform.position = enemy.transform.position;
         tmp.Play();
@@ -89,6 +90,12 @@ public class EnemyHandling : MonoBehaviour
                 break;
 
             case "PlayerProjectile":
+                hp -= 1;
+                destroyed = hp == 0;
+                if(destroyed)
+                    StartCoroutine("EnemyDestroyedEffects");
+                break;
+            case "Mine":
                 hp -= 1;
                 destroyed = hp == 0;
                 if(destroyed)
