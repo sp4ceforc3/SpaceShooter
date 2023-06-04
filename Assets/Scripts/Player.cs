@@ -70,11 +70,11 @@ public class Player : MonoBehaviour
 
         // Keyboard: "2"
         playerControls.Player.SpecialDomai.performed += _ => { /* TODO: */ };
-        playerControls.Player.Special.Enable();
+        playerControls.Player.SpecialDomai.Enable();
 
         // Keyboard: "3"
         playerControls.Player.SpecialLinus.performed += _ => { ShootLinusSpecial(); };
-        playerControls.Player.Special.Enable();
+        playerControls.Player.SpecialLinus.Enable();
 
         // Keyboard: "G"
         playerControls.Player.Godmode.performed += _ => {
