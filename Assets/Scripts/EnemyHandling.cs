@@ -6,34 +6,34 @@ using TMPro;
 public class EnemyHandling : MonoBehaviour
 {
     //TODO: later load from enemy_data 
-    [SerializeField] float speed = 1f;
+    [SerializeField] protected float speed = 1f;
     [SerializeField] ParticleSystem explosion;
     [SerializeField] GameObject enemy; 
     [SerializeField] EnemyData data;
-    [SerializeField] SpriteRenderer projectile;
+    [SerializeField] protected SpriteRenderer projectile;
 
     //Audio
     [SerializeField] AudioSource sfx;
     [SerializeField] AudioClip explosionSFX;
 
-    Rigidbody2D rb;
+    protected Rigidbody2D rb;
     SpriteRenderer sr;
-    Collider2D cl;
-    private GameObject firePoint;
+    protected Collider2D cl;
+    GameObject firePoint;
     int hp;
-    bool destroyed = false;
+    protected bool destroyed = false;
     float shootIntervall = 1f;
 
-    int direction = 1;
+    protected int direction = 1;
 
     // UI
     [SerializeField] private Transform damagePopUp;
 
     // Player -> Position
-    private GameObject player;
+    protected GameObject player;
 
     // Awake is called after creation 
-    private void Awake() {
+    void Awake() {
         player = GameObject.FindGameObjectWithTag("Player");
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
