@@ -26,6 +26,7 @@ public class Player : MonoBehaviour
     [SerializeField] Image drippleLaserUI;
     [SerializeField] Image specialLinusUI;
     [SerializeField] Image specialDomaiUI;
+    [SerializeField] GameObject godmodeUI;
 
     // Audio 
     [SerializeField] AudioSource sfx;
@@ -85,6 +86,7 @@ public class Player : MonoBehaviour
         // Keyboard: "G"
         playerControls.Player.Godmode.performed += _ => {
             godmode = !godmode;
+            godmodeUI.SetActive(godmode);
             // play sound at change
             sfx.PlayOneShot(godmodeSFX, 1f);
         };
