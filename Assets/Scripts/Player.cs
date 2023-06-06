@@ -25,6 +25,7 @@ public class Player : MonoBehaviour
     // UI
     [SerializeField] Image drippleLaserUI;
     [SerializeField] Image specialLinusUI;
+    [SerializeField] Image specialDomaiUI;
 
     // Audio 
     [SerializeField] AudioSource sfx;
@@ -42,6 +43,8 @@ public class Player : MonoBehaviour
     private float specialCoolDown = 3f;
     private float lastSpecialLinusShot = 0f;
     private float specialLinusCoolDown = 10f;
+    private float lastSpecialDomaiShot = -3f;
+    private float specialDomaiCoolDown = 3f;
     private int numberOfMines = 20;
 
     // Highscore = number of survived waves
@@ -72,7 +75,7 @@ public class Player : MonoBehaviour
         playerControls.Player.Special.Enable();
 
         // Keyboard: "2"
-        playerControls.Player.SpecialDomai.performed += _ => { /* TODO: */ };
+        playerControls.Player.SpecialDomai.performed += ShootDomaiSpecial;
         playerControls.Player.SpecialDomai.Enable();
 
         // Keyboard: "3"
@@ -129,6 +132,9 @@ public class Player : MonoBehaviour
 
             if (specialLinusUI.fillAmount < 1f)
                 specialLinusUI.fillAmount += 0.9f / (specialLinusCoolDown / Time.fixedDeltaTime);
+
+            if (specialDomaiUI.fillAmount < 1f)
+                specialDomaiUI.fillAmount += 0.9f / (specialDomaiCoolDown / Time.fixedDeltaTime);
         }
     }
 
@@ -193,6 +199,17 @@ public class Player : MonoBehaviour
                 Instantiate(mine, spawnPos, mine.transform.rotation);
             }
                  
+        }
+    }
+
+    private void ShootDomaiSpecial(InputAction.CallbackContext _) {
+        if(!destroyed && lastSpecialDomaiShot - Time.time <= -specialDomaiCoolDown) {
+            lastSpecialDomaiShot = Time.time;
+            specialDomaiUI.fillAmount = 0f;
+            sfx.PlayOneShot(specialSFX, 1f);
+            Instantiate(projectile, firePoint.transform.position, firePoint.transform.rotation * Quaternion.Euler(0, 0, 15));
+            Instantiate(projectile, firePoint.transform.position, firePoint.transform.rotation);
+            Instantiate(projectile, firePoint.transform.position, firePoint.transform.rotation * Quaternion.Euler(0, 0, -15));
         }
     }
 
