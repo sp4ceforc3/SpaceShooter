@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class EnemyHandling : MonoBehaviour
 {
@@ -24,6 +25,9 @@ public class EnemyHandling : MonoBehaviour
     float shootIntervall = 1f;
 
     int direction = 1;
+
+    // UI
+    [SerializeField] private Transform damagePopUp;
 
     // Player -> Position
     private GameObject player;
@@ -53,7 +57,7 @@ public class EnemyHandling : MonoBehaviour
     private void FixedUpdate() {
         if(!destroyed) {
             // Movement
-            rb.velocity =  direction * Vector3.up * speed * Time.fixedDeltaTime;
+            rb.velocity = direction * Vector3.up * speed * Time.fixedDeltaTime;
 
             // TODO: Increase properbility of rotation by wave
             if (true) {
@@ -96,6 +100,7 @@ public class EnemyHandling : MonoBehaviour
 
             case "PlayerProjectile":
                 hp -= 1;
+                CreateDamagePopUp();
                 destroyed = hp == 0;
                 if(destroyed)
                     StartCoroutine("EnemyDestroyedEffects");
@@ -113,4 +118,13 @@ public class EnemyHandling : MonoBehaviour
 
     }
 
+    // Popup over Enemy that show the taken damage
+    private void CreateDamagePopUp() {
+        Transform popUpTrans = Instantiate(damagePopUp, transform.position, Quaternion.identity);
+        TextMeshPro popUpText = popUpTrans.GetComponent<TextMeshPro>();
+        Rigidbody2D popUpRB = popUpTrans.GetComponent<Rigidbody2D>();
+        popUpRB.velocity = rb.velocity;
+        popUpText.SetText("-1");
+        Destroy(popUpTrans.gameObject, 0.75f);
+    }
 }
