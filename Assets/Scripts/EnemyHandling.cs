@@ -94,8 +94,6 @@ public class EnemyHandling : MonoBehaviour
         {
             case "Border":
                 direction *= -1;
-                // TODO: This is just a Test dummy to see, whether explosion works
-                //Instantiate(explosion, this.transform).Play();
                 break;
 
             case "PlayerProjectile":
@@ -107,6 +105,7 @@ public class EnemyHandling : MonoBehaviour
                 break;
             case "Mine":
                 hp -= 1;
+                CreateDamagePopUp();
                 destroyed = hp == 0;
                 if(destroyed)
                     StartCoroutine("EnemyDestroyedEffects");
