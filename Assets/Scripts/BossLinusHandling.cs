@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class BossLinusHandling : MonoBehaviour
 {
@@ -17,6 +18,9 @@ public class BossLinusHandling : MonoBehaviour
     //Audio
     [SerializeField] AudioSource sfx;
     [SerializeField] AudioClip explosionSFX;
+
+    //UI
+    [SerializeField] private Transform damagePopUp;
 
     Rigidbody2D rb;
     SpriteRenderer sr;
@@ -107,12 +111,14 @@ public class BossLinusHandling : MonoBehaviour
 
             case "PlayerProjectile":
                 hp -= 1;
+                CreateDamagePopUp();
                 destroyed = hp == 0;
                 if(destroyed)
                     StartCoroutine("EnemyDestroyedEffects");
                 break;
             case "Mine":
                 hp -= 1;
+                CreateDamagePopUp();
                 destroyed = hp == 0;
                 if(destroyed)
                     StartCoroutine("EnemyDestroyedEffects");
@@ -122,5 +128,15 @@ public class BossLinusHandling : MonoBehaviour
                 break;
         }
 
+    }
+
+    private void CreateDamagePopUp() {        
+        Transform popUpTrans = Instantiate(damagePopUp, transform.position, Quaternion.identity);
+        TextMeshPro popUpText = popUpTrans.GetComponent<TextMeshPro>();
+        Rigidbody2D popUpRB = popUpTrans.GetComponent<Rigidbody2D>();
+
+        popUpRB.velocity = rb.velocity;
+        popUpText.SetText("-1");
+        Destroy(popUpTrans.gameObject, 0.75f);
     }
 }
