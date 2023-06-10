@@ -64,7 +64,7 @@ public class WaveHandler : MonoBehaviour
         }
         else
         {
-            EnemyHandling script = (enemy.GetComponent<EnemyHandling>());
+            BossDomai script = (enemy.GetComponent<BossDomai>());
             script.waveHandlerScript = this;
         }
             

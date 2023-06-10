@@ -25,7 +25,6 @@ public class BossLinusHandling : MonoBehaviour
     [SerializeField] private Transform damagePopUp;
 
     Rigidbody2D rb;
-    SpriteRenderer sr;
     Collider2D cl;
     private GameObject firePoint;
     int hp;
@@ -40,7 +39,6 @@ public class BossLinusHandling : MonoBehaviour
     private void Awake() {
         player = GameObject.FindGameObjectWithTag("Player");
         rb = GetComponent<Rigidbody2D>();
-        sr = GetComponent<SpriteRenderer>();
         cl = GetComponent<Collider2D>();
     }
 

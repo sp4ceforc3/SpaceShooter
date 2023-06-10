@@ -18,6 +18,7 @@ public class EnemyHandling : MonoBehaviour
 
     protected Rigidbody2D rb;
     SpriteRenderer sr;
+    bool srFound = false;
     protected Collider2D cl;
     GameObject firePoint;
     int hp;
@@ -37,7 +38,7 @@ public class EnemyHandling : MonoBehaviour
     void Awake() {
         player = GameObject.FindGameObjectWithTag("Player");
         rb = GetComponent<Rigidbody2D>();
-        sr = GetComponent<SpriteRenderer>();
+        srFound = TryGetComponent<SpriteRenderer>(out sr);
         cl = GetComponent<Collider2D>();
         firePoint = gameObject.transform.GetChild(0).gameObject;
     }
@@ -48,29 +49,34 @@ public class EnemyHandling : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start() {
+    protected virtual void Start() {
         //TODO: load other data needed on Creation
         speed = data.movespeed;
         hp = data.hp;
-        sr.sprite = data.image;
+        if(srFound)
+            sr.sprite = data.image;
         shootIntervall = data.shootIntervall;
 
         InvokeRepeating("Shoot", 1f, shootIntervall);
     }
 
-    private void FixedUpdate() {
-        if(!destroyed) {
-            // Movement
-            rb.velocity = direction * Vector3.up * speed * Time.fixedDeltaTime;
+    public virtual void Movement()
+    {
+        // Movement
+        rb.velocity = direction * Vector3.up * speed * Time.fixedDeltaTime;
 
-            // TODO: Increase properbility of rotation by wave
-            if (true) {
-                // Rotation
-                Vector2 playerPos = (Vector2) player.transform.position;
-                Vector2 lookDirection = ((Vector2) gameObject.transform.position - playerPos).normalized;
-                gameObject.transform.up = lookDirection;
-            }
-        }        
+        // TODO: Increase properbility of rotation by wave
+        if (true) {
+            // Rotation
+            Vector2 playerPos = (Vector2) player.transform.position;
+            Vector2 lookDirection = ((Vector2) gameObject.transform.position - playerPos).normalized;
+            gameObject.transform.up = lookDirection;
+        }
+    }
+
+    private void FixedUpdate() {
+        if(!destroyed)
+            Movement();            
     }
 
     IEnumerator EnemyDestroyedEffects()
