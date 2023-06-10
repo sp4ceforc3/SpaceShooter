@@ -443,7 +443,7 @@ GameObject:
   - component: {fileID: 446937067}
   - component: {fileID: 446937068}
   - component: {fileID: 446937069}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Square (1)
   m_TagString: Border
   m_Icon: {fileID: 0}
@@ -572,7 +572,7 @@ GameObject:
   - component: {fileID: 495811893}
   - component: {fileID: 495811894}
   - component: {fileID: 495811895}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Square
   m_TagString: Border
   m_Icon: {fileID: 0}
@@ -6263,7 +6263,7 @@ GameObject:
   - component: {fileID: 883697427}
   m_Layer: 5
   m_Name: Boundaries
-  m_TagString: Untagged
+  m_TagString: Border
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6276,7 +6276,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 883697426}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.367357, y: -0.11958651, z: -9.93074}
+  m_LocalPosition: {x: -7.367357, y: -0.11958651, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -11703,7 +11703,7 @@ GameObject:
   - component: {fileID: 1127299084}
   - component: {fileID: 1127299083}
   - component: {fileID: 1127299082}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Square (3)
   m_TagString: Border
   m_Icon: {fileID: 0}
@@ -12483,7 +12483,7 @@ GameObject:
   - component: {fileID: 1663001534}
   - component: {fileID: 1663001533}
   - component: {fileID: 1663001532}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Square (4)
   m_TagString: Border
   m_Icon: {fileID: 0}
