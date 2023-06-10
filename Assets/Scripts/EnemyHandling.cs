@@ -23,9 +23,10 @@ public class EnemyHandling : MonoBehaviour
     int hp;
     protected bool destroyed = false;
     float shootIntervall = 1f;
-
     protected int direction = 1;
 
+    // WaveHandler
+    public WaveHandler waveHandlerScript;
     // UI
     [SerializeField] private Transform damagePopUp;
 
@@ -41,7 +42,10 @@ public class EnemyHandling : MonoBehaviour
         firePoint = gameObject.transform.GetChild(0).gameObject;
     }
 
-    void Shoot() => Instantiate(projectile, firePoint.transform.position, firePoint.transform.rotation);
+    void Shoot(){
+        if(!destroyed)
+            Instantiate(projectile, firePoint.transform.position, firePoint.transform.rotation);
+    }
 
     // Start is called before the first frame update
     void Start() {
@@ -83,6 +87,8 @@ public class EnemyHandling : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
 
         Destroy(enemy);
+
+        waveHandlerScript.enemiesLeft -= 1;
     }
 
     // Update is called once per frame
