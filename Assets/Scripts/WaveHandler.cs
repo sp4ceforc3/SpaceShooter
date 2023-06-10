@@ -17,6 +17,7 @@ public class WaveHandler : MonoBehaviour
     
     public int currentwave = 0;
     public int enemiesLeft = 0;
+    
     int bossIndex = 0;
     
     int numberOfEnemies = 0;
