@@ -111,10 +111,7 @@ public class BossLinusHandling : MonoBehaviour
         {
             case "Border":
                 direction *= -1;
-                // TODO: This is just a Test dummy to see, whether explosion works
-                //Instantiate(explosion, this.transform).Play();
                 break;
-
             case "PlayerProjectile":
                 hp -= 1;
                 CreateDamagePopUp();
@@ -128,6 +125,9 @@ public class BossLinusHandling : MonoBehaviour
                 destroyed = hp == 0;
                 if(destroyed)
                     StartCoroutine("EnemyDestroyedEffects");
+                break;
+            case "Player":
+                StartCoroutine("EnemyDestroyedEffects");
                 break;
                  
             default:

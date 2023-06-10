@@ -75,14 +75,15 @@ public class EnemyHandling : MonoBehaviour
 
     IEnumerator EnemyDestroyedEffects()
     {
+       
         Destroy(cl);
         ParticleSystem tmp = Instantiate(explosion);
         tmp.transform.position = enemy.transform.position;
         tmp.Play();
         // stay under explosion effect
         rb.velocity = new Vector3(0, 0, 0);
-        Destroy(rb);
         sfx.PlayOneShot(explosionSFX, 1f);
+        Destroy(rb);
 
         yield return new WaitForSeconds(1.5f);
 
@@ -101,7 +102,6 @@ public class EnemyHandling : MonoBehaviour
             case "Border":
                 direction *= -1;
                 break;
-
             case "PlayerProjectile":
                 hp -= 1;
                 CreateDamagePopUp();
@@ -116,7 +116,9 @@ public class EnemyHandling : MonoBehaviour
                 if(destroyed)
                     StartCoroutine("EnemyDestroyedEffects");
                 break;
-                 
+            case "Player":
+                StartCoroutine("EnemyDestroyedEffects");
+                break;
             default:
                 break;
         }
