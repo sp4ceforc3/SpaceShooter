@@ -19,6 +19,8 @@ public class BossLinusHandling : MonoBehaviour
     [SerializeField] AudioSource sfx;
     [SerializeField] AudioClip explosionSFX;
 
+    // WaveHandler
+    public WaveHandler waveHandlerScript;
     //UI
     [SerializeField] private Transform damagePopUp;
 
@@ -29,7 +31,6 @@ public class BossLinusHandling : MonoBehaviour
     int hp;
     bool destroyed = false;
     float shootIntervall = 1f;
-
     int direction = 1;
 
     // Player -> Position
@@ -45,13 +46,17 @@ public class BossLinusHandling : MonoBehaviour
 
     void Shoot()
     {
-        Instantiate(projectile, firePoint1.transform.position, firePoint1.transform.rotation);
-        Instantiate(projectile, firePoint2.transform.position, firePoint2.transform.rotation);
+        if(!destroyed)
+        {
+            Instantiate(projectile, firePoint1.transform.position, firePoint1.transform.rotation);
+            Instantiate(projectile, firePoint2.transform.position, firePoint2.transform.rotation);
+        }               
     }
     
     void FireBeam()
     {
-        Instantiate(laserBeam, beamShootPoint.transform.position, beamShootPoint.transform.rotation);
+        if(!destroyed)
+            Instantiate(laserBeam, beamShootPoint.transform.position, beamShootPoint.transform.rotation);
     }
 
     // Start is called before the first frame update
@@ -94,6 +99,7 @@ public class BossLinusHandling : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
 
         Destroy(enemy);
+        waveHandlerScript.enemiesLeft -= 1;
     }
 
     // Update is called once per frame
