@@ -48,9 +48,6 @@ public class Player : MonoBehaviour
     private float specialDomaiCoolDown = 3f;
     private int numberOfMines = 20;
 
-    // Highscore = number of survived waves
-    private int highscore = 0;
-
     // Input System to control the player
     private PlayerControls playerControls;
     private InputAction movement;
@@ -160,7 +157,6 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
 
         Destroy(player);
-        SetHighScore();
         SceneManager.LoadScene("MainMenu");
     }
 
@@ -264,11 +260,4 @@ public class Player : MonoBehaviour
         }
 
     }
-
-    // Set highscore if it is really the highest score 
-    private void SetHighScore() {
-        if (PlayerPrefs.GetInt(nameof(highscore)) < highscore)
-            PlayerPrefs.SetInt(nameof(highscore), highscore);
-    }
-
 }

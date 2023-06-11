@@ -98,9 +98,6 @@ public class EnemyHandling : MonoBehaviour
         Destroy(enemy);
     }
 
-    // Update is called once per frame
-    void Update() {}
-
     void OnCollisionEnter2D(Collision2D collision)
     {
         switch (collision.gameObject.tag)

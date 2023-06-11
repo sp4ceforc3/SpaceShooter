@@ -93,7 +93,9 @@ public class WaveHandler : MonoBehaviour
 
     public void StartWave()
     {
+        SetHighScore();
         currentwave +=1;
+        waveDisplay.SetText($"Wave: {currentwave}");
         numberOfEnemies = calculateNumberOfEnemies();
 
         if (((currentwave % 5) == 0) && currentwave != 0)
@@ -106,5 +108,11 @@ public class WaveHandler : MonoBehaviour
     {
         if(enemiesLeft <= 0 && !StartofWave )
             StartWave();
+    }
+
+    // Set highscore if it is really the highest score 
+    private void SetHighScore() {
+        if (PlayerPrefs.GetInt("highscore") < currentwave)
+            PlayerPrefs.SetInt("highscore", currentwave);
     }
 }
