@@ -25,7 +25,7 @@ public class WaveHandler : MonoBehaviour
 
     bool StartofWave = false;
 
-        private Vector3 GetSpawnPos(GameObject spawnArea)
+    private Vector3 GetSpawnPos(GameObject spawnArea)
     {
         Transform sat = spawnArea.transform;
         float rangeXBounds = (sat.lossyScale.x - 1) / 2;
@@ -101,16 +101,10 @@ public class WaveHandler : MonoBehaviour
         else
             StartCoroutine(spawnNextWave(numberOfEnemies));
     }
-
-    void Start()
-    {
-        
-    }
     
     void Update()
     {
-        if(enemiesLeft <= 0 && StartofWave != true)
+        if(enemiesLeft <= 0 && !StartofWave )
             StartWave();
-        
     }
 }

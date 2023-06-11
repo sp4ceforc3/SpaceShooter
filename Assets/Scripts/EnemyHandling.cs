@@ -28,6 +28,7 @@ public class EnemyHandling : MonoBehaviour
 
     // WaveHandler
     public WaveHandler waveHandlerScript;
+    
     // UI
     [SerializeField] private Transform damagePopUp;
 
@@ -93,9 +94,8 @@ public class EnemyHandling : MonoBehaviour
 
         yield return new WaitForSeconds(1.5f);
 
-        Destroy(enemy);
-
         waveHandlerScript.enemiesLeft -= 1;
+        Destroy(enemy);
     }
 
     // Update is called once per frame
@@ -113,17 +113,17 @@ public class EnemyHandling : MonoBehaviour
                 CreateDamagePopUp();
                 destroyed = hp == 0;
                 if(destroyed)
-                    StartCoroutine("EnemyDestroyedEffects");
+                    StartCoroutine(nameof(EnemyDestroyedEffects));
                 break;
             case "Mine":
                 hp -= 1;
                 CreateDamagePopUp();
                 destroyed = hp == 0;
                 if(destroyed)
-                    StartCoroutine("EnemyDestroyedEffects");
+                    StartCoroutine(nameof(EnemyDestroyedEffects));
                 break;
             case "Player":
-                StartCoroutine("EnemyDestroyedEffects");
+                StartCoroutine(nameof(EnemyDestroyedEffects));
                 break;
             default:
                 break;

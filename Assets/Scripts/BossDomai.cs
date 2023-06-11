@@ -11,11 +11,6 @@ public class BossDomai : EnemyHandling
 
     private float lastShot = 0f;
 
-    
-    protected override void Start() {
-        base.Start();
-    }
-
     public override void Movement()
     {       
         // Rotation
