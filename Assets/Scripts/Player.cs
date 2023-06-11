@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
     [SerializeField] float speed = 1f;
     [SerializeField] ParticleSystem explosion;
     [SerializeField] SpriteRenderer projectile;
+    [SerializeField] SpriteRenderer projectileFlash;
     [SerializeField] GameObject player;
     [SerializeField] GameObject minefield;
     [SerializeField] GameObject mine;
@@ -47,9 +48,6 @@ public class Player : MonoBehaviour
     private float lastSpecialDomaiShot = -3f;
     private float specialDomaiCoolDown = 3f;
     private int numberOfMines = 20;
-
-    // Highscore = number of survived waves
-    private int highscore = 0;
 
     // Input System to control the player
     private PlayerControls playerControls;
@@ -160,7 +158,6 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
 
         Destroy(player);
-        SetHighScore();
         SceneManager.LoadScene("MainMenu");
     }
 
@@ -209,10 +206,17 @@ public class Player : MonoBehaviour
             lastSpecialDomaiShot = Time.time;
             specialDomaiUI.fillAmount = 0f;
             sfx.PlayOneShot(specialSFX, 1f);
-            Instantiate(projectile, firePoint.transform.position, firePoint.transform.rotation * Quaternion.Euler(0, 0, 15));
-            Instantiate(projectile, firePoint.transform.position, firePoint.transform.rotation);
-            Instantiate(projectile, firePoint.transform.position, firePoint.transform.rotation * Quaternion.Euler(0, 0, -15));
+            Invoke(nameof(InstantiateFlash), 0.0f);
+            Invoke(nameof(InstantiateFlash), 0.1f);
+            Invoke(nameof(InstantiateFlash), 0.2f);
         }
+    }
+
+    // Support function for ShootDomaiSpecial
+    private void InstantiateFlash() {
+        Instantiate(projectileFlash, firePoint.transform.position, firePoint.transform.rotation * Quaternion.Euler(0, 0, 15));
+        Instantiate(projectileFlash, firePoint.transform.position, firePoint.transform.rotation);
+        Instantiate(projectileFlash, firePoint.transform.position, firePoint.transform.rotation * Quaternion.Euler(0, 0, -15));
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -240,12 +244,7 @@ public class Player : MonoBehaviour
                 if(!godmode) {
                     rb.velocity = new Vector3(0, 0, 0);
                     destroyed = true;
-                    // Enemy handling destruction itself
-                    //Destroy(collision.gameObject);
                     StartCoroutine(nameof(PlayerLooseEffects));
-                } else {
-                    // Enemy handling destruction itself
-                    //Destroy(collision.gameObject);
                 }
                 break;
             case "EnemyProjectile":
@@ -254,8 +253,6 @@ public class Player : MonoBehaviour
                     destroyed = true;
                     Destroy(collision.gameObject);
                     StartCoroutine(nameof(PlayerLooseEffects));
-                } else {
-                    Destroy(collision.gameObject);
                 }
                 break;
             
@@ -264,11 +261,4 @@ public class Player : MonoBehaviour
         }
 
     }
-
-    // Set highscore if it is really the highest score 
-    private void SetHighScore() {
-        if (PlayerPrefs.GetInt(nameof(highscore)) < highscore)
-            PlayerPrefs.SetInt(nameof(highscore), highscore);
-    }
-
 }

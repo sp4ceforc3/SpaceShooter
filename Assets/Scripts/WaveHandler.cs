@@ -25,7 +25,7 @@ public class WaveHandler : MonoBehaviour
 
     bool StartofWave = false;
 
-        private Vector3 GetSpawnPos(GameObject spawnArea)
+    private Vector3 GetSpawnPos(GameObject spawnArea)
     {
         Transform sat = spawnArea.transform;
         float rangeXBounds = (sat.lossyScale.x - 1) / 2;
@@ -93,7 +93,9 @@ public class WaveHandler : MonoBehaviour
 
     public void StartWave()
     {
+        SetHighScore();
         currentwave +=1;
+        waveDisplay.SetText($"Wave: {currentwave}");
         numberOfEnemies = calculateNumberOfEnemies();
 
         if (((currentwave % 5) == 0) && currentwave != 0)
@@ -101,16 +103,16 @@ public class WaveHandler : MonoBehaviour
         else
             StartCoroutine(spawnNextWave(numberOfEnemies));
     }
-
-    void Start()
-    {
-        
-    }
     
     void Update()
     {
-        if(enemiesLeft <= 0 && StartofWave != true)
+        if(enemiesLeft <= 0 && !StartofWave )
             StartWave();
-        
+    }
+
+    // Set highscore if it is really the highest score 
+    private void SetHighScore() {
+        if (PlayerPrefs.GetInt("highscore") < currentwave)
+            PlayerPrefs.SetInt("highscore", currentwave);
     }
 }

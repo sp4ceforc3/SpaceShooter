@@ -9,7 +9,7 @@ public class EnemyHandling : MonoBehaviour
     [SerializeField] protected float speed = 1f;
     [SerializeField] ParticleSystem explosion;
     [SerializeField] GameObject enemy; 
-    [SerializeField] EnemyData data;
+    [SerializeField] protected EnemyData data;
     [SerializeField] protected SpriteRenderer projectile;
 
     //Audio
@@ -21,13 +21,15 @@ public class EnemyHandling : MonoBehaviour
     bool srFound = false;
     protected Collider2D cl;
     GameObject firePoint;
-    int hp;
+    protected int hp;
     protected bool destroyed = false;
     float shootIntervall = 1f;
     protected int direction = 1;
+    private bool rotateToPlayer = true;
 
     // WaveHandler
     public WaveHandler waveHandlerScript;
+    
     // UI
     [SerializeField] private Transform damagePopUp;
 
@@ -43,13 +45,13 @@ public class EnemyHandling : MonoBehaviour
         firePoint = gameObject.transform.GetChild(0).gameObject;
     }
 
-    void Shoot(){
+    private void Shoot(){
         if(!destroyed)
             Instantiate(projectile, firePoint.transform.position, firePoint.transform.rotation);
     }
 
     // Start is called before the first frame update
-    protected virtual void Start() {
+    private void Start() {
         //TODO: load other data needed on Creation
         speed = data.movespeed;
         hp = data.hp;
@@ -57,31 +59,30 @@ public class EnemyHandling : MonoBehaviour
             sr.sprite = data.image;
         shootIntervall = data.shootIntervall;
 
-        InvokeRepeating("Shoot", 1f, shootIntervall);
-    }
-
-    public virtual void Movement()
-    {
-        // Movement
-        rb.velocity = direction * Vector3.up * speed * Time.fixedDeltaTime;
-
-        // TODO: Increase properbility of rotation by wave
-        if (true) {
-            // Rotation
-            Vector2 playerPos = (Vector2) player.transform.position;
-            Vector2 lookDirection = ((Vector2) gameObject.transform.position - playerPos).normalized;
-            gameObject.transform.up = lookDirection;
-        }
+        rotateToPlayer = waveHandlerScript.currentwave * Random.value <= 0.5f * waveHandlerScript.currentwave;
+        InvokeRepeating(nameof(Shoot), 1f, shootIntervall);
     }
 
     private void FixedUpdate() {
-        if(!destroyed)
-            Movement();            
+        if (!destroyed) {
+            // Movement
+            if (rb != null)
+                rb.velocity = direction * Vector3.up * speed * Time.fixedDeltaTime;
+
+            // Increase properbility of rotation by wave
+            if (rotateToPlayer) {
+                // Rotation
+                Vector2 playerPos = (Vector2) player.transform.position;
+                Vector2 lookDirection = ((Vector2) gameObject.transform.position - playerPos).normalized;
+                gameObject.transform.up = lookDirection;
+            } else {
+                gameObject.transform.up = Vector2.right;
+            }
+        }     
     }
 
     IEnumerator EnemyDestroyedEffects()
     {
-       
         Destroy(cl);
         ParticleSystem tmp = Instantiate(explosion);
         tmp.transform.position = enemy.transform.position;
@@ -93,13 +94,9 @@ public class EnemyHandling : MonoBehaviour
 
         yield return new WaitForSeconds(1.5f);
 
-        Destroy(enemy);
-
         waveHandlerScript.enemiesLeft -= 1;
+        Destroy(enemy);
     }
-
-    // Update is called once per frame
-    void Update() {}
 
     void OnCollisionEnter2D(Collision2D collision)
     {
@@ -113,17 +110,17 @@ public class EnemyHandling : MonoBehaviour
                 CreateDamagePopUp();
                 destroyed = hp == 0;
                 if(destroyed)
-                    StartCoroutine("EnemyDestroyedEffects");
+                    StartCoroutine(nameof(EnemyDestroyedEffects));
                 break;
             case "Mine":
                 hp -= 1;
                 CreateDamagePopUp();
                 destroyed = hp == 0;
                 if(destroyed)
-                    StartCoroutine("EnemyDestroyedEffects");
+                    StartCoroutine(nameof(EnemyDestroyedEffects));
                 break;
             case "Player":
-                StartCoroutine("EnemyDestroyedEffects");
+                StartCoroutine(nameof(EnemyDestroyedEffects));
                 break;
             default:
                 break;

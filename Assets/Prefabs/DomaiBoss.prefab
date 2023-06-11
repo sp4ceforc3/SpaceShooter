@@ -1958,7 +1958,7 @@ MonoBehaviour:
   enemy: {fileID: 7890844654927593027}
   data: {fileID: 11400000, guid: 683a9df648b4b16aa9dedd10a585de33, type: 2}
   projectile: {fileID: 4920017906580166035, guid: ba8a53ca9ffec5b13b04ae7e0c164931, type: 3}
-  sfx: {fileID: 0}
+  sfx: {fileID: -4265282341611215754}
   explosionSFX: {fileID: 8300000, guid: 97ab63c70815d984ab144ff144a46e5d, type: 3}
   waveHandlerScript: {fileID: 0}
   damagePopUp: {fileID: 5310143313001537508, guid: 8b69393ac3dc4affe9464f5363ea0699, type: 3}
