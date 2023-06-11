@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class BossLinusHandling : MonoBehaviour
 {
@@ -18,14 +19,17 @@ public class BossLinusHandling : MonoBehaviour
     [SerializeField] AudioSource sfx;
     [SerializeField] AudioClip explosionSFX;
 
+    // WaveHandler
+    public WaveHandler waveHandlerScript;
+    //UI
+    [SerializeField] private Transform damagePopUp;
+
     Rigidbody2D rb;
-    SpriteRenderer sr;
     Collider2D cl;
     private GameObject firePoint;
     int hp;
     bool destroyed = false;
     float shootIntervall = 1f;
-
     int direction = 1;
 
     // Player -> Position
@@ -35,19 +39,22 @@ public class BossLinusHandling : MonoBehaviour
     private void Awake() {
         player = GameObject.FindGameObjectWithTag("Player");
         rb = GetComponent<Rigidbody2D>();
-        sr = GetComponent<SpriteRenderer>();
         cl = GetComponent<Collider2D>();
     }
 
     void Shoot()
     {
-        Instantiate(projectile, firePoint1.transform.position, firePoint1.transform.rotation);
-        Instantiate(projectile, firePoint2.transform.position, firePoint2.transform.rotation);
+        if(!destroyed)
+        {
+            Instantiate(projectile, firePoint1.transform.position, firePoint1.transform.rotation);
+            Instantiate(projectile, firePoint2.transform.position, firePoint2.transform.rotation);
+        }               
     }
     
     void FireBeam()
     {
-        Instantiate(laserBeam, beamShootPoint.transform.position, beamShootPoint.transform.rotation);
+        if(!destroyed)
+            Instantiate(laserBeam, beamShootPoint.transform.position, beamShootPoint.transform.rotation);
     }
 
     // Start is called before the first frame update
@@ -90,6 +97,7 @@ public class BossLinusHandling : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
 
         Destroy(enemy);
+        waveHandlerScript.enemiesLeft -= 1;
     }
 
     // Update is called once per frame
@@ -101,26 +109,38 @@ public class BossLinusHandling : MonoBehaviour
         {
             case "Border":
                 direction *= -1;
-                // TODO: This is just a Test dummy to see, whether explosion works
-                //Instantiate(explosion, this.transform).Play();
                 break;
-
             case "PlayerProjectile":
                 hp -= 1;
+                CreateDamagePopUp();
                 destroyed = hp == 0;
                 if(destroyed)
                     StartCoroutine("EnemyDestroyedEffects");
                 break;
             case "Mine":
                 hp -= 1;
+                CreateDamagePopUp();
                 destroyed = hp == 0;
                 if(destroyed)
                     StartCoroutine("EnemyDestroyedEffects");
+                break;
+            case "Player":
+                StartCoroutine("EnemyDestroyedEffects");
                 break;
                  
             default:
                 break;
         }
 
+    }
+
+    private void CreateDamagePopUp() {        
+        Transform popUpTrans = Instantiate(damagePopUp, transform.position, Quaternion.identity);
+        TextMeshPro popUpText = popUpTrans.GetComponent<TextMeshPro>();
+        Rigidbody2D popUpRB = popUpTrans.GetComponent<Rigidbody2D>();
+
+        popUpRB.velocity = rb.velocity;
+        popUpText.SetText("-1");
+        Destroy(popUpTrans.gameObject, 0.75f);
     }
 }

@@ -18,14 +18,16 @@ public class EnemyHandling : MonoBehaviour
 
     protected Rigidbody2D rb;
     SpriteRenderer sr;
+    bool srFound = false;
     protected Collider2D cl;
     GameObject firePoint;
     int hp;
     protected bool destroyed = false;
     float shootIntervall = 1f;
-
     protected int direction = 1;
 
+    // WaveHandler
+    public WaveHandler waveHandlerScript;
     // UI
     [SerializeField] private Transform damagePopUp;
 
@@ -36,53 +38,64 @@ public class EnemyHandling : MonoBehaviour
     void Awake() {
         player = GameObject.FindGameObjectWithTag("Player");
         rb = GetComponent<Rigidbody2D>();
-        sr = GetComponent<SpriteRenderer>();
+        srFound = TryGetComponent<SpriteRenderer>(out sr);
         cl = GetComponent<Collider2D>();
         firePoint = gameObject.transform.GetChild(0).gameObject;
     }
 
-    void Shoot() => Instantiate(projectile, firePoint.transform.position, firePoint.transform.rotation);
+    void Shoot(){
+        if(!destroyed)
+            Instantiate(projectile, firePoint.transform.position, firePoint.transform.rotation);
+    }
 
     // Start is called before the first frame update
-    void Start() {
+    protected virtual void Start() {
         //TODO: load other data needed on Creation
         speed = data.movespeed;
         hp = data.hp;
-        sr.sprite = data.image;
+        if(srFound)
+            sr.sprite = data.image;
         shootIntervall = data.shootIntervall;
 
         InvokeRepeating("Shoot", 1f, shootIntervall);
     }
 
-    private void FixedUpdate() {
-        if(!destroyed) {
-            // Movement
-            rb.velocity = direction * Vector3.up * speed * Time.fixedDeltaTime;
+    public virtual void Movement()
+    {
+        // Movement
+        rb.velocity = direction * Vector3.up * speed * Time.fixedDeltaTime;
 
-            // TODO: Increase properbility of rotation by wave
-            if (true) {
-                // Rotation
-                Vector2 playerPos = (Vector2) player.transform.position;
-                Vector2 lookDirection = ((Vector2) gameObject.transform.position - playerPos).normalized;
-                gameObject.transform.up = lookDirection;
-            }
-        }        
+        // TODO: Increase properbility of rotation by wave
+        if (true) {
+            // Rotation
+            Vector2 playerPos = (Vector2) player.transform.position;
+            Vector2 lookDirection = ((Vector2) gameObject.transform.position - playerPos).normalized;
+            gameObject.transform.up = lookDirection;
+        }
+    }
+
+    private void FixedUpdate() {
+        if(!destroyed)
+            Movement();            
     }
 
     IEnumerator EnemyDestroyedEffects()
     {
+       
         Destroy(cl);
         ParticleSystem tmp = Instantiate(explosion);
         tmp.transform.position = enemy.transform.position;
         tmp.Play();
         // stay under explosion effect
         rb.velocity = new Vector3(0, 0, 0);
-        Destroy(rb);
         sfx.PlayOneShot(explosionSFX, 1f);
+        Destroy(rb);
 
         yield return new WaitForSeconds(1.5f);
 
         Destroy(enemy);
+
+        waveHandlerScript.enemiesLeft -= 1;
     }
 
     // Update is called once per frame
@@ -94,10 +107,7 @@ public class EnemyHandling : MonoBehaviour
         {
             case "Border":
                 direction *= -1;
-                // TODO: This is just a Test dummy to see, whether explosion works
-                //Instantiate(explosion, this.transform).Play();
                 break;
-
             case "PlayerProjectile":
                 hp -= 1;
                 CreateDamagePopUp();
@@ -107,11 +117,14 @@ public class EnemyHandling : MonoBehaviour
                 break;
             case "Mine":
                 hp -= 1;
+                CreateDamagePopUp();
                 destroyed = hp == 0;
                 if(destroyed)
                     StartCoroutine("EnemyDestroyedEffects");
                 break;
-                 
+            case "Player":
+                StartCoroutine("EnemyDestroyedEffects");
+                break;
             default:
                 break;
         }

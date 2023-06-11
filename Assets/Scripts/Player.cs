@@ -236,18 +236,18 @@ public class Player : MonoBehaviour
             case "Border":
                 rb.velocity = new Vector3(0, 0, 0);
                 break;
-
             case "Enemy":
                 if(!godmode) {
                     rb.velocity = new Vector3(0, 0, 0);
                     destroyed = true;
-                    Destroy(collision.gameObject);
+                    // Enemy handling destruction itself
+                    //Destroy(collision.gameObject);
                     StartCoroutine(nameof(PlayerLooseEffects));
                 } else {
-                    Destroy(collision.gameObject);
+                    // Enemy handling destruction itself
+                    //Destroy(collision.gameObject);
                 }
                 break;
-
             case "EnemyProjectile":
                 if(!godmode) {
                     rb.velocity = new Vector3(0, 0, 0);
