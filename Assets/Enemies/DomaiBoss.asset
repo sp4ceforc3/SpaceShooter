@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyName: DomaiBoss
   image: {fileID: 0}
-  hp: 50
+  hp: 40
   movespeed: 150
   laser: {fileID: 4920017906580166028, guid: d5ba653e37e5c1a44831ceac72365898, type: 3}
   shootIntervall: 1

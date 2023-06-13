@@ -31,9 +31,9 @@ public class WaveHandler : MonoBehaviour
         float rangeXBounds = (sat.lossyScale.x - 1) / 2;
         float rangeYBounds = (sat.lossyScale.y - 1) / 2;
 
-        float x = Random.Range(0, rangeXBounds);
-        float y = Random.Range(0, rangeYBounds);
-        Vector3 spawnPos = new Vector3(x, y, 0); 
+        float x = Random.Range(-rangeXBounds, rangeXBounds);
+        float y = Random.Range(-rangeYBounds, rangeYBounds);
+        Vector3 spawnPos = new Vector3(sat.position.x + x, sat.position.y + y, 0); 
         return spawnPos;        
     }
 
@@ -55,6 +55,8 @@ public class WaveHandler : MonoBehaviour
         StartofWave = true;
         yield return new WaitForSeconds(2f);
         Vector3 spawnPos = GetSpawnPos(bossSpawnArea);
+        Debug.Log(spawnPos);
+
         GameObject enemy = Instantiate(bosses[bossIndex], spawnPos, bossSpawnArea.transform.rotation);
 
         if(bossIndex == 1)
